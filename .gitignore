@@ -1,0 +1,4 @@
+lex.yy.c
+lexer_program
+*.o
+
