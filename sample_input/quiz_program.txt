@@ -1,0 +1,49 @@
+begin
+
+string studentName;
+
+int quiz1, quiz2, quiz3, quiz4;
+
+float total, average, percentage;
+
+char grade;
+
+input(studentName);
+
+input(quiz1);
+input(quiz2);
+input(quiz3);
+input(quiz4);
+
+total = quiz1 + quiz2 + quiz3 + quiz4;
+
+average = total / 4;
+
+percentage = (total / 40) * 100;
+
+if (percentage >= 90)
+    grade = 'A';
+
+else if (percentage >= 80)
+    grade = 'B';
+
+else if (percentage >= 70)
+    grade = 'C';
+
+else if (percentage >= 60)
+    grade = 'D';
+
+else
+    grade = 'F';
+
+print(studentName);
+
+print(total);
+
+print(average);
+
+print(percentage);
+
+print(grade);
+
+end
