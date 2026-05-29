@@ -8,7 +8,7 @@ void yyerror(const char *s);
 %}
 
 /* =========================================================================
-   1. TOKEN DECLARATIONS (Matches Person 1's Lexer)
+   1. TOKEN DECLARATIONS 
    ========================================================================= */
 %token BEGIN_KEYWORD END_KEYWORD STRING_KEYWORD INT_KEYWORD FLOAT_KEYWORD CHAR_KEYWORD
 %token INPUT_KEYWORD IF_KEYWORD ELSE_KEYWORD PRINT_KEYWORD
