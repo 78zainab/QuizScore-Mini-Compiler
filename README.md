@@ -151,8 +151,8 @@ gcc lex.yy.c -o lexer
 ```bash
 ./lexer
 ```
-
----
+## Checking Outputs
+cat outputs/tokens.txt 
 
 # Expected Outputs
 
