@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "parser/parser.y"
+#line 1 "parser.y"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -78,7 +78,7 @@ extern FILE *yyin;
 extern FILE *tokenFile;
 void yyerror(const char *s);
 
-#line 82 "parser/parser.tab.c"
+#line 82 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -1137,13 +1137,13 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: BEGIN_KEYWORD block END_KEYWORD  */
-#line 30 "parser/parser.y"
+#line 30 "parser.y"
                                     { printf("Parsing completed successfully! Clean syntax.\n"); }
-#line 1143 "parser/parser.tab.c"
+#line 1143 "parser.tab.c"
     break;
 
 
-#line 1147 "parser/parser.tab.c"
+#line 1147 "parser.tab.c"
 
       default: break;
     }
@@ -1336,7 +1336,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 111 "parser/parser.y"
+#line 111 "parser.y"
 
 /* =========================================================================
    3. C ROUTINES (Error Handling)
