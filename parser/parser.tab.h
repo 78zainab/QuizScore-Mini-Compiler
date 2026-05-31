@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_PARSER_TAB_H_INCLUDED
-# define YY_YY_PARSER_TAB_H_INCLUDED
+#ifndef YY_YY_PARSER_PARSER_TAB_H_INCLUDED
+# define YY_YY_PARSER_PARSER_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -66,15 +66,16 @@ extern int yydebug;
     PRINT_KEYWORD = 267,           /* PRINT_KEYWORD  */
     IDENTIFIER = 268,              /* IDENTIFIER  */
     INTEGER = 269,                 /* INTEGER  */
-    CHAR_LITERAL = 270,            /* CHAR_LITERAL  */
-    SEMICOLON = 271,               /* SEMICOLON  */
-    COMMA = 272,                   /* COMMA  */
-    LPAREN = 273,                  /* LPAREN  */
-    RPAREN = 274,                  /* RPAREN  */
-    ASSIGN = 275,                  /* ASSIGN  */
-    ARITH_OP = 276,                /* ARITH_OP  */
-    RELOP = 277,                   /* RELOP  */
-    LOWER_THAN_ELSE = 278          /* LOWER_THAN_ELSE  */
+    FLOAT_LITERAL = 270,           /* FLOAT_LITERAL  */
+    CHAR_LITERAL = 271,            /* CHAR_LITERAL  */
+    SEMICOLON = 272,               /* SEMICOLON  */
+    COMMA = 273,                   /* COMMA  */
+    LPAREN = 274,                  /* LPAREN  */
+    RPAREN = 275,                  /* RPAREN  */
+    ASSIGN = 276,                  /* ASSIGN  */
+    ARITH_OP = 277,                /* ARITH_OP  */
+    RELOP = 278,                   /* RELOP  */
+    LOWER_THAN_ELSE = 279          /* LOWER_THAN_ELSE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -93,4 +94,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */
+#endif /* !YY_YY_PARSER_PARSER_TAB_H_INCLUDED  */

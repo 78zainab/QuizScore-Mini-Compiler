@@ -4,6 +4,8 @@
 
 extern int yylex();
 extern int yylineno;
+extern FILE *yyin;
+extern FILE *tokenFile;
 void yyerror(const char *s);
 %}
 
@@ -12,10 +14,10 @@ void yyerror(const char *s);
    ========================================================================= */
 %token BEGIN_KEYWORD END_KEYWORD STRING_KEYWORD INT_KEYWORD FLOAT_KEYWORD CHAR_KEYWORD
 %token INPUT_KEYWORD IF_KEYWORD ELSE_KEYWORD PRINT_KEYWORD
-%token IDENTIFIER INTEGER CHAR_LITERAL
+%token IDENTIFIER INTEGER FLOAT_LITERAL CHAR_LITERAL
 %token SEMICOLON COMMA LPAREN RPAREN ASSIGN ARITH_OP RELOP
 
-/* Precedence rules to completely resolve the classic Dangling-Else Shift/Reduce Warning */
+/* Precedence rules to resolve the classic dangling-else shift/reduce warning. */
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE_KEYWORD
 
@@ -82,27 +84,28 @@ assignment_statement:
 expression:
     term
     | expression ARITH_OP term
-    | LPAREN expression RPAREN
     ;
 
 term:
     IDENTIFIER
     | INTEGER
+    | FLOAT_LITERAL
     | CHAR_LITERAL
+    | LPAREN expression RPAREN
     ;
 
-/* If-Else Ladder Logic (Fixed & Unambiguous with Precedence) */
+/* If-Else Ladder Logic */
 if_else_statement:
-    IF_KEYWORD LPAREN condition RPAREN statement else_part %prec LOWER_THAN_ELSE
+    IF_KEYWORD LPAREN condition RPAREN statement else_part
     ;
 
 else_part:
     ELSE_KEYWORD statement          /* Handles both final 'else' and chained 'else if' */
-    | /* empty */                   /* Handles standalone 'if' */
+    | /* empty */ %prec LOWER_THAN_ELSE
     ;
 
 condition:
-    IDENTIFIER RELOP INTEGER
+    expression RELOP expression
     ;
 
 %%
@@ -115,5 +118,31 @@ void yyerror(const char *s) {
 }
 
 int main() {
-    return yyparse();
+    int result;
+    FILE *inputFile = fopen("sample_input/quiz_program.txt", "r");
+
+    if (inputFile == NULL) {
+        printf("Cannot open input file.\n");
+        return 1;
+    }
+
+    yyin = inputFile;
+    tokenFile = fopen("outputs/tokens.txt", "w");
+
+    if (tokenFile == NULL) {
+        printf("Cannot create tokens file.\n");
+        fclose(inputFile);
+        return 1;
+    }
+
+    result = yyparse();
+
+    fclose(inputFile);
+    fclose(tokenFile);
+
+    if (result == 0) {
+        printf("Tokens saved in outputs/tokens.txt\n");
+    }
+
+    return result;
 }

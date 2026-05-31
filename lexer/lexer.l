@@ -1,11 +1,19 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include "../parser/parser.tab.h"
 
-FILE *tokenFile;
+FILE *tokenFile = NULL;
+
+static void write_token(const char *type, const char *value)
+{
+    if (tokenFile != NULL) {
+        fprintf(tokenFile, "%s\t%s\n", type, value);
+    }
+}
 %}
 
-%option noyywrap
+%option noyywrap yylineno
 
 LETTER      [a-zA-Z_]
 DIGIT       [0-9]
@@ -16,82 +24,49 @@ FLOATNUM    {DIGIT}+"."{DIGIT}+
 
 %%
 
-"begin"        { fprintf(tokenFile, "KEYWORD\tbegin\n"); }
-"end"          { fprintf(tokenFile, "KEYWORD\tend\n"); }
+"begin"        { write_token("KEYWORD", yytext); return BEGIN_KEYWORD; }
+"end"          { write_token("KEYWORD", yytext); return END_KEYWORD; }
 
-"int"          { fprintf(tokenFile, "KEYWORD\tint\n"); }
-"float"        { fprintf(tokenFile, "KEYWORD\tfloat\n"); }
-"char"         { fprintf(tokenFile, "KEYWORD\tchar\n"); }
-"string"       { fprintf(tokenFile, "KEYWORD\tstring\n"); }
+"int"          { write_token("KEYWORD", yytext); return INT_KEYWORD; }
+"float"        { write_token("KEYWORD", yytext); return FLOAT_KEYWORD; }
+"char"         { write_token("KEYWORD", yytext); return CHAR_KEYWORD; }
+"string"       { write_token("KEYWORD", yytext); return STRING_KEYWORD; }
 
-"if"           { fprintf(tokenFile, "KEYWORD\tif\n"); }
-"else"         { fprintf(tokenFile, "KEYWORD\telse\n"); }
+"if"           { write_token("KEYWORD", yytext); return IF_KEYWORD; }
+"else"         { write_token("KEYWORD", yytext); return ELSE_KEYWORD; }
 
-"input"        { fprintf(tokenFile, "KEYWORD\tinput\n"); }
-"print"        { fprintf(tokenFile, "KEYWORD\tprint\n"); }
+"input"        { write_token("KEYWORD", yytext); return INPUT_KEYWORD; }
+"print"        { write_token("KEYWORD", yytext); return PRINT_KEYWORD; }
 
-">="           { fprintf(tokenFile, "RELOP\t>=\n"); }
-"<="           { fprintf(tokenFile, "RELOP\t<=\n"); }
-"=="           { fprintf(tokenFile, "RELOP\t==\n"); }
-">"            { fprintf(tokenFile, "RELOP\t>\n"); }
-"<"            { fprintf(tokenFile, "RELOP\t<\n"); }
+">="           { write_token("RELOP", yytext); return RELOP; }
+"<="           { write_token("RELOP", yytext); return RELOP; }
+"=="           { write_token("RELOP", yytext); return RELOP; }
+">"            { write_token("RELOP", yytext); return RELOP; }
+"<"            { write_token("RELOP", yytext); return RELOP; }
 
-"="            { fprintf(tokenFile, "ASSIGN\t=\n"); }
+"="            { write_token("ASSIGN", yytext); return ASSIGN; }
 
-"+"            { fprintf(tokenFile, "ARITH_OP\t+\n"); }
-"-"            { fprintf(tokenFile, "ARITH_OP\t-\n"); }
-"*"            { fprintf(tokenFile, "ARITH_OP\t*\n"); }
-"/"            { fprintf(tokenFile, "ARITH_OP\t/\n"); }
+"+"            { write_token("ARITH_OP", yytext); return ARITH_OP; }
+"-"            { write_token("ARITH_OP", yytext); return ARITH_OP; }
+"*"            { write_token("ARITH_OP", yytext); return ARITH_OP; }
+"/"            { write_token("ARITH_OP", yytext); return ARITH_OP; }
 
-";"            { fprintf(tokenFile, "SEMICOLON\t;\n"); }
-","            { fprintf(tokenFile, "COMMA\t,\n"); }
+";"            { write_token("SEMICOLON", yytext); return SEMICOLON; }
+","            { write_token("COMMA", yytext); return COMMA; }
 
-"("            { fprintf(tokenFile, "LPAREN\t(\n"); }
-")"            { fprintf(tokenFile, "RPAREN\t)\n"); }
+"("            { write_token("LPAREN", yytext); return LPAREN; }
+")"            { write_token("RPAREN", yytext); return RPAREN; }
 
-{FLOATNUM}     { fprintf(tokenFile, "FLOAT\t%s\n", yytext); }
+{FLOATNUM}     { write_token("FLOAT", yytext); return FLOAT_LITERAL; }
 
-{INTNUM}       { fprintf(tokenFile, "INTEGER\t%s\n", yytext); }
+{INTNUM}       { write_token("INTEGER", yytext); return INTEGER; }
 
-{ID}           { fprintf(tokenFile, "IDENTIFIER\t%s\n", yytext); }
+{ID}           { write_token("IDENTIFIER", yytext); return IDENTIFIER; }
 
-\'[A-Za-z]\'   { fprintf(tokenFile, "CHAR_LITERAL\t%s\n", yytext); }
+\'[A-Za-z]\'   { write_token("CHAR_LITERAL", yytext); return CHAR_LITERAL; }
 
 [ \t\n]+       ;
 
-.              { fprintf(tokenFile, "UNKNOWN\t%s\n", yytext); }
+.              { write_token("UNKNOWN", yytext); return yytext[0]; }
 
 %%
-
-int main()
-{
-    FILE *inputFile;
-
-    inputFile = fopen("sample_input/quiz_program.txt", "r");
-
-    if(inputFile == NULL)
-    {
-        printf("Cannot open input file.\n");
-        return 1;
-    }
-
-    yyin = inputFile;
-
-    tokenFile = fopen("outputs/tokens.txt", "w");
-
-    if(tokenFile == NULL)
-    {
-        printf("Cannot create tokens file.\n");
-        return 1;
-    }
-
-    yylex();
-
-    printf("Lexical Analysis Completed.\n");
-    printf("Tokens saved in outputs/tokens.txt\n");
-
-    fclose(inputFile);
-    fclose(tokenFile);
-
-    return 0;
-}
